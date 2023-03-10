@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+
+  server:
+    container_name: server
+    build: server/
+    ports:
+      - 8081:8081
+    restart: on-failure
+    volumes:
+      - server:/usr/src/app
+    environment:
+            - PORT=8081
+            - DB_HOST=host.docker.internal
+            - DB_PORT=3306
+            - DB_USERNAME=root
+            - DB_PASSWORD=birmingham
+            - DB_DATABASE=currencyconverter
+
+volumes:
+  server:
