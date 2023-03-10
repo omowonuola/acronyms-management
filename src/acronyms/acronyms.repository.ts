@@ -2,6 +2,7 @@ import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { Logger, NotFoundException, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AcronymEntity } from './acronyms.entity';
+import * as fs from 'fs';
 
 export class AcronymRepository {
   private readonly logger = new Logger(AcronymRepository.name);
@@ -10,50 +11,15 @@ export class AcronymRepository {
     private acronymEntity: Repository<AcronymEntity>,
   ) {}
 
-  async getAllExchanges(
-    @Query('page') page = 1,
-    @Query('limit') limit = 10,
-  ): Promise<void> {
-    try {
-      const skip = (page - 1) * limit;
-      //   const where = {};
-      //   if (startDate && endDate) {
-      //     where['createdAt'] = Between(startDate, endDate);
-      //   } else if (startDate) {
-      //     where['createdAt'] = MoreThanOrEqual(startDate);
-      //   } else if (endDate) {
-      //     where['createdAt'] = LessThanOrEqual(endDate);
-      //   }
-      const [rows, count] = await this.acronymEntity.findAndCount({
-        // where,
-        skip,
-        take: limit,
-      });
-      if (!rows || rows.length === 0) {
-        throw new NotFoundException('No Live Rates Found');
-      }
-      // emit the data via websocket
-      // this.server.emit('newDataAdded', {
-      //   data: rows,
-      //   total: count,
-      //   page,
-      //   pageSize: limit,
-      //   startDate,
-      //   endDate,
-      // });
-    } catch (error) {
-      this.logger.log(error);
-    }
-  }
+  async loadAcronyms() {
+    const data = fs.readFileSync('src/acronym.json', 'utf8');
+    const acronyms = JSON.parse(data);
 
-  async loadJsonData(jsonData: string): Promise<void> {
-    const data = JSON.parse(jsonData);
-
-    for (const item of data) {
-      const keyValue = new AcronymEntity();
-      keyValue.acronym = Object.keys(item)[0];
-      keyValue.definition = item[keyValue.acronym];
-      await this.acronymEntity.save(keyValue);
+    for (const acronym of acronyms) {
+      const newAcronym = new AcronymEntity();
+      newAcronym.definition = acronym[Object.keys(acronym)[0]];
+      newAcronym.acronym = Object.keys(acronym)[0];
+      await this.acronymEntity.save(newAcronym);
     }
   }
 }
