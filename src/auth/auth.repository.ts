@@ -2,18 +2,22 @@ import {
   ConflictException,
   InternalServerErrorException,
   Logger,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthEntity } from './auth.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-// import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+// import { JwtPayload } from './jwt-payload.interface';
 
 export class AuthRepository {
   private readonly logger = new Logger(AuthRepository.name);
   constructor(
     @InjectRepository(AuthEntity)
     private userEntity: Repository<AuthEntity>,
+    private jwtService: JwtService,
   ) {}
 
   async createUser(
@@ -21,10 +25,10 @@ export class AuthRepository {
   ): Promise<AuthEntity> {
     const { username, password } = authCredentialsDto;
 
-    // const salt = await bcrypt.genSalt();
-    // const hashedPassword = await bcrypt.hash(password, salt);
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = this.userEntity.create({ username, password });
+    const user = this.userEntity.create({ username, password: hashedPassword });
 
     try {
       return await this.userEntity.save(user);
@@ -35,6 +39,21 @@ export class AuthRepository {
       } else {
         throw new InternalServerErrorException();
       }
+    }
+  }
+
+  async signInUser(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ accessToken: string }> {
+    const { username, password } = authCredentialsDto;
+    const user = await this.userEntity.findOne({ where: { username } });
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const payload: JwtPayload = { username };
+      const accessToken: string = await this.jwtService.sign(payload);
+      return { accessToken };
+    } else {
+      throw new UnauthorizedException('Please check your login credentials');
     }
   }
 }
