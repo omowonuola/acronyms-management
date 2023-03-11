@@ -9,7 +9,14 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { AuthEntity } from 'src/auth/auth.entity';
+import { GetUser } from 'src/auth/user-decorator';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymService } from './acronyms.service';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
@@ -74,6 +81,7 @@ export class AcronymController {
 
   @Patch('/update/:acronym')
   @ApiOperation({ summary: 'Update Existing Acronym' })
+  @ApiBearerAuth()
   @ApiResponse({
     description: 'return the details of the updated acronym',
     type: AcronymEntity,
@@ -86,12 +94,16 @@ export class AcronymController {
   }
 
   @Delete('/delete/:deleteAcronym')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete Existing Acronym' })
   @ApiResponse({
     description: 'remove an existing record from the database',
     type: AcronymEntity,
   })
-  deleteAcronym(@Param('deleteAcronym') acronym: string) {
+  deleteAcronym(
+    @Param('deleteAcronym') acronym: string,
+    @GetUser() auth: AuthEntity,
+  ): Promise<void> {
     return this.acronymService.deleteAcronym(acronym);
   }
 }

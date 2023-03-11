@@ -10,6 +10,7 @@ import { AcronymEntity, paginationResponse } from './acronyms.entity';
 import * as fs from 'fs';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
 import { UpdateAcronymDto } from './dto/update-acronym.dto';
+import { AuthEntity } from 'src/auth/auth.entity';
 
 export class AcronymRepository {
   private readonly logger = new Logger(AcronymRepository.name);

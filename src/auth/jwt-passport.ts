@@ -11,12 +11,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(AuthEntity)
-    private authEntity: Repository<AuthEntity>,
-    // private configService: ConfigService,
+    private authEntity: Repository<AuthEntity>, // private configService: ConfigService,
   ) {
     super({
-    //   secretOrKey: configService.get('JWT_SECRET'),
-    secretOrKey: 'topusersecret',
+      //   secretOrKey: configService.get('JWT_SECRET'),
+      secretOrKey: 'topusersecret',
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }

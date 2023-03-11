@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AuthEntity } from 'src/auth/auth.entity';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymRepository } from './acronyms.repository';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
