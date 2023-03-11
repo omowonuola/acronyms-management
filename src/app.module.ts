@@ -3,12 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AcronymEntity } from './acronyms/acronyms.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AcronymsModule } from './acronyms/acronyms.module';
-import { UserEntity } from './auth/auth.entity';
+import { AuthEntity } from './auth/auth.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     AcronymsModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -16,7 +18,7 @@ import { UserEntity } from './auth/auth.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [AcronymEntity, UserEntity],
+      entities: [AcronymEntity, AuthEntity],
       synchronize: true,
     }),
   ],
