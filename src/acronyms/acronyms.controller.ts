@@ -8,15 +8,15 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthEntity } from 'src/auth/auth.entity';
-import { GetUser } from 'src/auth/user-decorator';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymService } from './acronyms.service';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
@@ -24,6 +24,7 @@ import { UpdateAcronymDto } from './dto/update-acronym.dto';
 
 @Controller('api/acronym')
 @ApiTags('acronym')
+// @ApiBearerAuth()
 export class AcronymController {
   private logger = new Logger('AcronymController');
   constructor(private acronymService: AcronymService) {}
@@ -38,16 +39,6 @@ export class AcronymController {
     return this.acronymService.loadJsonData();
   }
 
-  @Get('/:acronymName')
-  @ApiOperation({ summary: 'Get A Acronym In The Database' })
-  @ApiResponse({
-    description: 'return a particular acronym record',
-    type: AcronymEntity,
-  })
-  async getAcronymByName(@Param('acronymName') acronymName: string) {
-    return this.acronymService.getAcronymByName(acronymName);
-  }
-
   @Get('allAcronyms')
   @ApiOperation({ summary: 'Get All Paginated Acronyms In The Database' })
   @ApiResponse({ description: 'return all records', type: AcronymEntity })
@@ -57,6 +48,16 @@ export class AcronymController {
     @Query('search') search?: string,
   ) {
     return this.acronymService.getAllAcronyms(page, limit, search);
+  }
+
+  @Get('/:acronymName')
+  @ApiOperation({ summary: 'Get A Acronym In The Database' })
+  @ApiResponse({
+    description: 'return a particular acronym record',
+    type: AcronymEntity,
+  })
+  async getAcronymByName(@Param('acronymName') acronymName: string) {
+    return this.acronymService.getAcronymByName(acronymName);
   }
 
   @Get('/random/:count')
@@ -79,9 +80,10 @@ export class AcronymController {
     return this.acronymService.createAcronym(createAcronymDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch('/update/:acronym')
+  @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Update Existing Acronym' })
-  @ApiBearerAuth()
   @ApiResponse({
     description: 'return the details of the updated acronym',
     type: AcronymEntity,
@@ -93,17 +95,15 @@ export class AcronymController {
     return this.acronymService.updateAcronym(acronym, updateAcronymDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/delete/:deleteAcronym')
-  @ApiBearerAuth()
+  @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Delete Existing Acronym' })
   @ApiResponse({
     description: 'remove an existing record from the database',
     type: AcronymEntity,
   })
-  deleteAcronym(
-    @Param('deleteAcronym') acronym: string,
-    @GetUser() auth: AuthEntity,
-  ): Promise<void> {
+  deleteAcronym(@Param('deleteAcronym') acronym: string): Promise<void> {
     return this.acronymService.deleteAcronym(acronym);
   }
 }

@@ -13,6 +13,16 @@ async function bootstrap() {
     .setDescription('Messaging Acronyms API description')
     .setVersion('1.0')
     .addTag('Acronyms')
+    .addBearerAuth(
+      {
+        description: 'Default JWT Authorization',
+        type: 'http',
+        in: 'header',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

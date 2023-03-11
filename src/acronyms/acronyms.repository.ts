@@ -40,11 +40,13 @@ export class AcronymRepository {
       const skip = (page - 1) * limit;
       let queryBuilder = this.acronymEntity.createQueryBuilder('acronym');
       if (search) {
-        queryBuilder = queryBuilder
-          .where('acronym.acronym ILIKE :acronym', { acronym: `%${search}%` })
-          .orWhere('acronym.definition ILIKE :definition', {
-            definition: `%${search}%`,
-          });
+        const searchParam = `%${search}%`;
+        queryBuilder = queryBuilder.where(
+          'LOWER(acronym.acronym) LIKE LOWER(:acronym)',
+          {
+            acronym: searchParam,
+          },
+        );
       }
 
       const [rows, count] = await queryBuilder
@@ -55,12 +57,21 @@ export class AcronymRepository {
       if (!rows || rows.length === 0) {
         throw new NotFoundException('No Acronyms Found');
       }
-      return {
+
+      const hasMore = count > skip + limit;
+      const nextFrom = hasMore ? skip + limit : undefined;
+      const response = {
         total: count,
         page: page,
         pageSize: limit,
         data: rows,
       };
+
+      if (hasMore) {
+        response['next'] = `?page=${nextFrom}&limit=${limit}&search=${search}`;
+      }
+
+      return response;
     } catch (error) {
       this.logger.log(error);
     }
