@@ -67,4 +67,36 @@ export class AcronymRepository {
     }
     return result;
   }
+
+  async getRandomAcronyms(count: number): Promise<AcronymEntity[]> {
+    const totalCount = await this.acronymEntity.count();
+    if (totalCount < count) {
+      throw new NotFoundException(
+        `Only ${totalCount} acronyms found in the database.`,
+      );
+    }
+
+    const maxIndex = totalCount - 1;
+    const randomIndices = [];
+    let index;
+    for (let i = 0; i < count; i++) {
+      do {
+        index = Math.floor(Math.random() * totalCount);
+      } while (randomIndices.includes(index));
+      randomIndices.push(index);
+    }
+
+    const acronyms = [];
+    for (const randomIndex of randomIndices) {
+      const acronym = await this.acronymEntity
+        .createQueryBuilder('acronym')
+        .skip(randomIndex)
+        .take(10)
+        .orderBy('id')
+        .getOne();
+      acronyms.push(acronym);
+    }
+
+    return acronyms;
+  }
 }

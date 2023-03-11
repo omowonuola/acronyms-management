@@ -17,4 +17,8 @@ export class AcronymService {
   getAcronymByName(acronymName: string): Promise<any> {
     return this.currencyRepository.getAcronymByName(acronymName);
   }
+
+  getRandomAcronyms(count: number): Promise<any> {
+    return this.currencyRepository.getRandomAcronyms(count);
+  }
 }

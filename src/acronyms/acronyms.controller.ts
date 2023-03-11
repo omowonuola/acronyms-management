@@ -37,7 +37,7 @@ export class AcronymController {
     return this.acronymService.getAcronymByName(acronymName);
   }
 
-  @Get('/:allAcronyms')
+  @Get('allAcronyms')
   @ApiOperation({ summary: 'Get All Paginated Acronyms In The Database' })
   @ApiResponse({ description: 'return all records', type: AcronymEntity })
   getAllAcronyms(
@@ -46,5 +46,15 @@ export class AcronymController {
     @Query('search') search?: string,
   ) {
     return this.acronymService.getAllAcronyms(page, limit, search);
+  }
+
+  @Get('/random/:count')
+  @ApiOperation({ summary: 'Get Random Count Of Acronyms From The Database' })
+  @ApiResponse({
+    description: 'return random count of records',
+    type: AcronymEntity,
+  })
+  getRandomAcronyms(@Param('count') count: number) {
+    return this.acronymService.getRandomAcronyms(count);
   }
 }
