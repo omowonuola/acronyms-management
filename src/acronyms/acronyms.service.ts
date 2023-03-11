@@ -6,8 +6,15 @@ export class AcronymService {
   constructor(private readonly currencyRepository: AcronymRepository) {}
 
   async loadJsonData(): Promise<any> {
-    console.log('error');
     await this.currencyRepository.loadAcronyms();
     return 'Acronyms loaded successfully!';
+  }
+
+  getAllAcronyms(page, limit, search): Promise<any> {
+    return this.currencyRepository.getAllAcronyms(page, limit, search);
+  }
+
+  getAcronymByName(acronymName: string): Promise<any> {
+    return this.currencyRepository.getAcronymByName(acronymName);
   }
 }

@@ -19,6 +19,4 @@ export type paginationResponse = {
   total: number;
   page: number;
   pageSize: number;
-  startDate: Date;
-  endDate: Date;
 };
