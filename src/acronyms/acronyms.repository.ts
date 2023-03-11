@@ -1,8 +1,14 @@
-import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
-import { Logger, NotFoundException, Query } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import {
+  ConflictException,
+  Logger,
+  NotFoundException,
+  Query,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AcronymEntity, paginationResponse } from './acronyms.entity';
 import * as fs from 'fs';
+import { CreateAcronymDto } from './dto/create-acronym.dto';
 
 export class AcronymRepository {
   private readonly logger = new Logger(AcronymRepository.name);
@@ -98,5 +104,26 @@ export class AcronymRepository {
     }
 
     return acronyms;
+  }
+
+  async createAcronym(
+    createAcronymDto: CreateAcronymDto,
+  ): Promise<AcronymEntity> {
+    const { acronym, definition } = createAcronymDto;
+
+    // check for duplicate acronym in the db
+    const acronymFound = await this.acronymEntity.findOne({
+      where: { acronym },
+    });
+
+    if (acronymFound) {
+      throw new ConflictException(`acronym with ${acronym} found`);
+    }
+    const newAcronym = this.acronymEntity.create({
+      acronym,
+      definition,
+    });
+
+    return await this.acronymEntity.save(newAcronym);
   }
 }

@@ -10,6 +10,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymService } from './acronyms.service';
+import { CreateAcronymDto } from './dto/create-acronym.dto';
 
 @Controller('api/acronym')
 @ApiTags('acronym')
@@ -56,5 +57,15 @@ export class AcronymController {
   })
   getRandomAcronyms(@Param('count') count: number) {
     return this.acronymService.getRandomAcronyms(count);
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create new Acronym' })
+  @ApiResponse({
+    description: 'return the details of the newly created acronym',
+    type: AcronymEntity,
+  })
+  createAcronym(@Body() createAcronymDto: CreateAcronymDto) {
+    return this.acronymService.createAcronym(createAcronymDto);
   }
 }

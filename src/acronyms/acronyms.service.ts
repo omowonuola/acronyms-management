@@ -1,5 +1,7 @@
 import { Body, Injectable } from '@nestjs/common';
+import { AcronymEntity } from './acronyms.entity';
 import { AcronymRepository } from './acronyms.repository';
+import { CreateAcronymDto } from './dto/create-acronym.dto';
 
 @Injectable()
 export class AcronymService {
@@ -20,5 +22,9 @@ export class AcronymService {
 
   getRandomAcronyms(count: number): Promise<any> {
     return this.currencyRepository.getRandomAcronyms(count);
+  }
+
+  createAcronym(createAcronymDto: CreateAcronymDto): Promise<AcronymEntity> {
+    return this.currencyRepository.createAcronym(createAcronymDto);
   }
 }
