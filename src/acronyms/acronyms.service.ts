@@ -35,4 +35,8 @@ export class AcronymService {
   ): Promise<AcronymEntity> {
     return this.currencyRepository.updateAcronym(acronym, updateAcronymDto);
   }
+
+  deleteAcronym(acronym: string): Promise<any> {
+    return this.currencyRepository.deleteAcronym(acronym);
+  }
 }

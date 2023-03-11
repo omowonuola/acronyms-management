@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -72,7 +73,7 @@ export class AcronymController {
     return this.acronymService.createAcronym(createAcronymDto);
   }
 
-  @Patch('/:acronym')
+  @Patch('/update/:acronym')
   @ApiOperation({ summary: 'Update Existing Acronym' })
   @ApiResponse({
     description: 'return the details of the updated acronym',
@@ -83,5 +84,15 @@ export class AcronymController {
     @Body() updateAcronymDto: UpdateAcronymDto,
   ) {
     return this.acronymService.updateAcronym(acronym, updateAcronymDto);
+  }
+
+  @Delete('/delete/:deleteAcronym')
+  @ApiOperation({ summary: 'Delete Existing Acronym' })
+  @ApiResponse({
+    description: 'remove an existing record from the database',
+    type: AcronymEntity,
+  })
+  deleteAcronym(@Param('deleteAcronym') acronym: string) {
+    return this.acronymService.deleteAcronym(acronym);
   }
 }

@@ -146,4 +146,15 @@ export class AcronymRepository {
     return await this.acronymEntity.save(updateAcronym);
   }
 
+  async deleteAcronym(acronym: string): Promise<any> {
+    const deleteAcronym = await this.acronymEntity.findOne({
+      where: { acronym },
+    });
+
+    if (!deleteAcronym) {
+      throw new NotFoundException(`Acronym ${acronym} not found`);
+    }
+    await this.acronymEntity.remove(deleteAcronym);
+    return `Acronym ${acronym} has been sucessfully deleted`;
+  }
 }
