@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AcronymEntity, paginationResponse } from './acronyms.entity';
 import * as fs from 'fs';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
+import { UpdateAcronymDto } from './dto/update-acronym.dto';
 
 export class AcronymRepository {
   private readonly logger = new Logger(AcronymRepository.name);
@@ -126,4 +127,23 @@ export class AcronymRepository {
 
     return await this.acronymEntity.save(newAcronym);
   }
+
+  async updateAcronym(
+    acronym: string,
+    updateAcronymDto: UpdateAcronymDto,
+  ): Promise<AcronymEntity> {
+    const { definition } = updateAcronymDto;
+
+    const updateAcronym = await this.acronymEntity.findOne({
+      where: { acronym },
+    });
+
+    if (!updateAcronym) {
+      throw new NotFoundException(`Acronym ${acronym} not found`);
+    }
+    updateAcronym.definition = definition;
+
+    return await this.acronymEntity.save(updateAcronym);
+  }
+
 }

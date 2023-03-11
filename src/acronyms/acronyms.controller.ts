@@ -4,13 +4,16 @@ import {
   Get,
   Logger,
   Param,
+  Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymService } from './acronyms.service';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
+import { UpdateAcronymDto } from './dto/update-acronym.dto';
 
 @Controller('api/acronym')
 @ApiTags('acronym')
@@ -67,5 +70,18 @@ export class AcronymController {
   })
   createAcronym(@Body() createAcronymDto: CreateAcronymDto) {
     return this.acronymService.createAcronym(createAcronymDto);
+  }
+
+  @Patch('/:acronym')
+  @ApiOperation({ summary: 'Update Existing Acronym' })
+  @ApiResponse({
+    description: 'return the details of the updated acronym',
+    type: AcronymEntity,
+  })
+  updateAcronym(
+    @Param('acronym') acronym: string,
+    @Body() updateAcronymDto: UpdateAcronymDto,
+  ) {
+    return this.acronymService.updateAcronym(acronym, updateAcronymDto);
   }
 }

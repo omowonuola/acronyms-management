@@ -1,7 +1,8 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymRepository } from './acronyms.repository';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
+import { UpdateAcronymDto } from './dto/update-acronym.dto';
 
 @Injectable()
 export class AcronymService {
@@ -9,7 +10,7 @@ export class AcronymService {
 
   async loadJsonData(): Promise<any> {
     await this.currencyRepository.loadAcronyms();
-    return 'Acronyms loaded successfully!';
+    return 'Acronyms loaded to the database successfully!';
   }
 
   getAllAcronyms(page, limit, search): Promise<any> {
@@ -26,5 +27,12 @@ export class AcronymService {
 
   createAcronym(createAcronymDto: CreateAcronymDto): Promise<AcronymEntity> {
     return this.currencyRepository.createAcronym(createAcronymDto);
+  }
+
+  updateAcronym(
+    acronym: string,
+    updateAcronymDto: UpdateAcronymDto,
+  ): Promise<AcronymEntity> {
+    return this.currencyRepository.updateAcronym(acronym, updateAcronymDto);
   }
 }
