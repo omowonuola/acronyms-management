@@ -111,7 +111,7 @@ export class AcronymRepository {
   ): Promise<AcronymEntity> {
     const { acronym, definition } = createAcronymDto;
 
-    // check for duplicate acronym in the db
+    // check for duplicate acronym in the database
     const acronymFound = await this.acronymEntity.findOne({
       where: { acronym },
     });
