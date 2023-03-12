@@ -104,8 +104,10 @@ The docker commands below are already included with this template and can be use
 ```sh
 # Start the application using npm NodeJS in development
 docker-compose up
-```
+
 The docker configuration is in the docker-compose.yaml file
+```
+
 
 ## 5. Project goals
 
