@@ -19,7 +19,6 @@ import {
 } from '@nestjs/swagger';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymService } from './acronyms.service';
-import { AcronymFilterDto } from './dto/acronym-filter.dto';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
 import { UpdateAcronymDto } from './dto/update-acronym.dto';
 

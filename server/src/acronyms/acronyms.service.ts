@@ -1,5 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { AuthEntity } from 'src/auth/auth.entity';
+import { Injectable } from '@nestjs/common';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymRepository } from './acronyms.repository';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
@@ -7,37 +6,37 @@ import { UpdateAcronymDto } from './dto/update-acronym.dto';
 
 @Injectable()
 export class AcronymService {
-  constructor(private readonly currencyRepository: AcronymRepository) {}
+  constructor(private readonly acronymRepository: AcronymRepository) {}
 
   async loadJsonData(): Promise<any> {
-    await this.currencyRepository.loadAcronyms();
+    await this.acronymRepository.loadAcronyms();
     return 'Acronyms loaded to the database successfully!';
   }
 
   getAllAcronyms(page, limit, search): Promise<any> {
-    return this.currencyRepository.getAllAcronyms(page, limit, search);
+    return this.acronymRepository.getAllAcronyms(page, limit, search);
   }
 
   getAcronymByName(acronymName: string): Promise<any> {
-    return this.currencyRepository.getAcronymByName(acronymName);
+    return this.acronymRepository.getAcronymByName(acronymName);
   }
 
   getRandomAcronyms(count: number): Promise<any> {
-    return this.currencyRepository.getRandomAcronyms(count);
+    return this.acronymRepository.getRandomAcronyms(count);
   }
 
   createAcronym(createAcronymDto: CreateAcronymDto): Promise<AcronymEntity> {
-    return this.currencyRepository.createAcronym(createAcronymDto);
+    return this.acronymRepository.createAcronym(createAcronymDto);
   }
 
   updateAcronym(
     acronym: string,
     updateAcronymDto: UpdateAcronymDto,
   ): Promise<AcronymEntity> {
-    return this.currencyRepository.updateAcronym(acronym, updateAcronymDto);
+    return this.acronymRepository.updateAcronym(acronym, updateAcronymDto);
   }
 
   deleteAcronym(acronym: string): Promise<any> {
-    return this.currencyRepository.deleteAcronym(acronym);
+    return this.acronymRepository.deleteAcronym(acronym);
   }
 }

@@ -5,10 +5,13 @@ import { ConfigModule } from '@nestjs/config';
 import { AcronymsModule } from './acronyms/acronyms.module';
 import { AuthEntity } from './auth/auth.entity';
 import { AuthModule } from './auth/auth.module';
+import { configValidation } from './acronyms/schema.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      validationSchema: configValidation,
+    }),
     AcronymsModule,
     AuthModule,
     TypeOrmModule.forRoot({
