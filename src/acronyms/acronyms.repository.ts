@@ -10,7 +10,6 @@ import { AcronymEntity, paginationResponse } from './acronyms.entity';
 import * as fs from 'fs';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
 import { UpdateAcronymDto } from './dto/update-acronym.dto';
-import { AuthEntity } from 'src/auth/auth.entity';
 
 export class AcronymRepository {
   private readonly logger = new Logger(AcronymRepository.name);
@@ -19,15 +18,27 @@ export class AcronymRepository {
     private acronymEntity: Repository<AcronymEntity>,
   ) {}
 
-  async loadAcronyms() {
-    const data = fs.readFileSync('src/acronym.json', 'utf8');
-    const acronyms = JSON.parse(data);
+  async loadAcronyms(): Promise<void> {
+    try {
+      const data = fs.readFileSync('src/acronym.json', 'utf8');
+      const acronyms = JSON.parse(data);
 
-    for (const acronym of acronyms) {
-      const newAcronym = new AcronymEntity();
-      newAcronym.definition = acronym[Object.keys(acronym)[0]];
-      newAcronym.acronym = Object.keys(acronym)[0];
-      await this.acronymEntity.save(newAcronym);
+      for (const acronym of acronyms) {
+        // check for existing acronyms before loading the data
+        const existingAcronym = await this.acronymEntity.findOne({
+          where: { acronym: Object.keys(acronym)[0] },
+        });
+        if (existingAcronym) {
+          // Skip creating a new entity if the acronym already exists
+          continue;
+        }
+        const newAcronym = new AcronymEntity();
+        newAcronym.definition = acronym[Object.keys(acronym)[0]];
+        newAcronym.acronym = Object.keys(acronym)[0];
+        await this.acronymEntity.save(newAcronym);
+      }
+    } catch (error) {
+      this.logger.log(error);
     }
   }
 
