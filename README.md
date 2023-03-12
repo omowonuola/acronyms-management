@@ -51,9 +51,13 @@ You are now ready to launch the NestJS application using the command below.
 # Launch the development server with npm command
 yarn run start:dev
 ```
+### 1.4 Swagger Documentation
 
+```sh
 You can now head to `http://localhost:8081/api#/Acronyms` and see the API Swagger docs. 
 The example Acronym API that gets all acronyms in the database with pagination and limit is located at the `http://localhost:8081/api#/acronym/AcronymController_getAllAcronyms` endpoint in the swagger documentation.
+
+```
 
 ## 2. Project structure
 
