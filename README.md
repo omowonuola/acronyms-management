@@ -38,18 +38,18 @@ RUN WITH SERVER
 The next step will be to install all the dependencies of the project.
 
 ```sh
-npm install for the server folder
+yarn add for the server folder
 ```
 
 For a standard development configuration, you can leave the default values for PORT, which has the default value of 8081.
 
-### 1.3 Launch and discover with NPM
+### 1.3 Launch and discover with YARN
 
 You are now ready to launch the NestJS application using the command below.
 
 ```sh
 # Launch the development server with npm command
-npm start:dev
+yarn run start:dev
 ```
 
 You can now head to `http://localhost:8081/api#/Acronyms` and see the API Swagger docs. 
@@ -87,14 +87,14 @@ src/
 
 ## 3. Default NPM commands
 
-The NPM commands below are already included with this template and can be used to quickly run, build and test the project.
+The YARN commands below are already included with this template and can be used to quickly run, build and test the project.
 
 ```sh
 # Start the application using npm NodeJS in development
-npm start:dev (use this to start the application locally)
+yarn run start:dev (use this to start the application locally)
 
 # Run the project' unit tests
-npm test:watch(use this to start the unit testing locally)
+yarn run test:watch(use this to start the unit testing locally)
 
 ```
 
