@@ -38,7 +38,8 @@ RUN WITH SERVER
 The next step will be to install all the dependencies of the project.
 
 ```sh
-yarn add for the server folder
+cd into the second server folder to install dependencies
+yarn install for the server folder
 ```
 
 For a standard development configuration, you can leave the default values for PORT, which has the default value of 8081.
