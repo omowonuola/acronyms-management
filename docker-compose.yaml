@@ -3,7 +3,7 @@ services:
 
   server:
     container_name: server
-    build: server/
+    build: server/ 
     ports:
       - 8081:8081
     restart: on-failure
@@ -16,6 +16,7 @@ services:
             - DB_USERNAME=root
             - DB_PASSWORD=birmingham
             - DB_DATABASE=currencyconverter
+            - JWT_SECRET='{dZqC_/KBzNSuPT~@!Gr5NHG^j]Jz"VQf(6>Q,\dp?_z9eC(C$-bJCEwRM}pC=2!'
 
 volumes:
   server:
