@@ -19,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymService } from './acronyms.service';
+import { AcronymFilterDto } from './dto/acronym-filter.dto';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
 import { UpdateAcronymDto } from './dto/update-acronym.dto';
 
@@ -46,7 +47,9 @@ export class AcronymController {
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('search') search?: string,
+    // @Query() filterDto: AcronymFilterDto,
   ) {
+    this.logger.verbose(`User retrieving all acronyms. Filter: ${search}`);
     return this.acronymService.getAllAcronyms(page, limit, search);
   }
 
@@ -57,6 +60,7 @@ export class AcronymController {
     type: AcronymEntity,
   })
   async getAcronymByName(@Param('acronymName') acronymName: string) {
+    this.logger.verbose(`User retrieving a acronym. Filter: ${acronymName}`);
     return this.acronymService.getAcronymByName(acronymName);
   }
 
@@ -67,6 +71,9 @@ export class AcronymController {
     type: AcronymEntity,
   })
   getRandomAcronyms(@Param('count') count: number) {
+    this.logger.verbose(
+      `User retrieving a random count of acronyms. Filter: ${count}`,
+    );
     return this.acronymService.getRandomAcronyms(count);
   }
 
@@ -77,6 +84,11 @@ export class AcronymController {
     type: AcronymEntity,
   })
   createAcronym(@Body() createAcronymDto: CreateAcronymDto) {
+    this.logger.verbose(
+      `User creating a new acronym with the definition. Data: ${JSON.stringify(
+        createAcronymDto,
+      )}`,
+    );
     return this.acronymService.createAcronym(createAcronymDto);
   }
 
@@ -92,6 +104,11 @@ export class AcronymController {
     @Param('acronym') acronym: string,
     @Body() updateAcronymDto: UpdateAcronymDto,
   ) {
+    this.logger.verbose(
+      `User updating an existing acronym definition. Data: ${JSON.stringify(
+        updateAcronymDto,
+      )}`,
+    );
     return this.acronymService.updateAcronym(acronym, updateAcronymDto);
   }
 
@@ -104,6 +121,11 @@ export class AcronymController {
     type: AcronymEntity,
   })
   deleteAcronym(@Param('deleteAcronym') acronym: string): Promise<void> {
+    this.logger.verbose(
+      `User deleting an existing acronym and the definition. Data: ${JSON.stringify(
+        acronym,
+      )}`,
+    );
     return this.acronymService.deleteAcronym(acronym);
   }
 }
