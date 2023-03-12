@@ -14,11 +14,13 @@ import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { AcronymEntity } from './acronyms.entity';
 import { AcronymService } from './acronyms.service';
+import { AcronymFilterDto } from './dto/acronym-filter.dto';
 import { CreateAcronymDto } from './dto/create-acronym.dto';
 import { UpdateAcronymDto } from './dto/update-acronym.dto';
 
@@ -41,12 +43,32 @@ export class AcronymController {
 
   @Get('allAcronyms')
   @ApiOperation({ summary: 'Get All Paginated Acronyms In The Database' })
-  @ApiResponse({ description: 'return all records', type: AcronymEntity })
+  @ApiResponse({
+    description: 'return all records',
+    type: AcronymFilterDto,
+  })
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    description: 'Search Page',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    description: 'Search Limit',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'search',
+    type: String,
+    description: 'Search',
+    required: false,
+  })
   getAllAcronyms(
-    @Query('page') page = 1,
-    @Query('limit') limit = 10,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
     @Query('search') search?: string,
-    // @Query() filterDto: AcronymFilterDto,
   ) {
     this.logger.verbose(`User retrieving all acronyms. Filter: ${search}`);
     return this.acronymService.getAllAcronyms(page, limit, search);
