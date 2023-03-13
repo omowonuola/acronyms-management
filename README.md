@@ -38,7 +38,7 @@ RUN WITH SERVER
 The next step will be to install all the dependencies of the project.
 
 ```sh
-cd into the second server folder to install dependencies
+cd into the server folder to install dependencies
 yarn install for the server folder
 ```
 
@@ -57,6 +57,11 @@ yarn run start:dev
 ```sh
 You can now head to `http://localhost:8081/api#/Acronyms` and see the API Swagger docs. 
 The example Acronym API that gets all acronyms in the database with pagination and limit is located at the `http://localhost:8081/api#/acronym/AcronymController_getAllAcronyms` endpoint in the swagger documentation.
+
+The DELETE acronym and UPDATE acronym api need authentication as a signin user. 
+-->> create a user and signin using the signup and signin api, copy the token alone to the authentication header
+at the top right corner of the swagger documentation. You do not need to add the Bearer prefix.
+
 
 The Api System Design can be viewed here Link `https://excalidraw.com/#json=l9hmIFCTi_Auqlsw9iG4s,ikI16LfXYB-so5wMvKJXWQ`
 ```
