@@ -15,8 +15,51 @@ services:
             - DB_PORT=3306
             - DB_USERNAME=root
             - DB_PASSWORD=birmingham
-            - DB_DATABASE=currencyconverter
+            - DB_DATABASE=acronyms
             - JWT_SECRET='{dZqC_/KBzNSuPT~@!Gr5NHG^j]Jz"VQf(6>Q,\dp?_z9eC(C$-bJCEwRM}pC=2!'
+
+  db:
+    image: postgres
+    container_name: postgresql
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: sample
+      POSTGRES_USER: sample_local
+      POSTGRES_DB: sample_local
+    networks:
+      - database
+      - dbpg4
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_NAME:-sample_local}", "-U", "${DB_USER:-sample_local}" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5433:5432"
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 5000
+    networks:
+      - dbpg4
+    depends_on:
+      - db
+    ports:
+      - "5050:5000"
+    volumes:
+      - pgadmin4-data:/var/lib/pgadmin
 
 volumes:
   server:
+  pgdata:
+  pgadmin4-data:
+
+networks:
+  database:
+  dbpg4:
